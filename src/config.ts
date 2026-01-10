@@ -41,7 +41,17 @@ export const siteConfig: SiteConfig = {
 		enable: true,
 		// Wallpaper mode, 'random' or 'fixed'
 		mode: "random",
-		urls: ["https://picsum.photos/1920/1080"],
+		urls: {
+			// URL for desktop devices (width > 768px)
+			h: ["https://randomimg.isfreeah.top/h"],
+			// URL for mobile devices (width <= 768px)
+			v: ["https://randomimg.isfreeah.top/v"],
+			// Fallback URLs if h/v is not specified
+			all: [
+				"https://randomimg.isfreeah.top/h",
+				"https://randomimg.isfreeah.top/v",
+			],
+		},
 	},
 };
 

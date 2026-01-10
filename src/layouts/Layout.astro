@@ -368,6 +368,32 @@ function showBanner() {
 	banner.classList.remove('opacity-0', 'scale-105');
 }
 
+function getDeviceType() {
+	// Get the current viewport width
+	const width = window.innerWidth;
+	// 768px is a common breakpoint for desktop/mobile
+	return width > 768 ? 'desktop' : 'mobile';
+}
+
+function getWallpaperUrls() {
+	const { wallpaper } = siteConfig;
+	const deviceType = getDeviceType();
+	const urls = wallpaper.urls;
+
+	// Get the appropriate URL list based on device type
+	let urlList;
+	if (deviceType === 'desktop' && urls.h && urls.h.length > 0) {
+		urlList = urls.h;
+	} else if (deviceType === 'mobile' && urls.v && urls.v.length > 0) {
+		urlList = urls.v;
+	} else {
+		// Fallback to 'all' if no specific URL list for the device type
+		urlList = urls.all || [];
+	}
+
+	return urlList;
+}
+
 function initWallpaper() {
 	const { wallpaper } = siteConfig;
 	if (!wallpaper.enable) return;
@@ -375,14 +401,17 @@ function initWallpaper() {
 	const wallpaperElement = document.getElementById('wallpaper');
 	if (!wallpaperElement) return;
 
+	const urlList = getWallpaperUrls();
+	if (urlList.length === 0) return;
+
 	let imageUrl;
 	if (wallpaper.mode === 'random') {
-		// Select a random image from the urls array
-		const randomIndex = Math.floor(Math.random() * wallpaper.urls.length);
-		imageUrl = wallpaper.urls[randomIndex];
+		// Select a random image from the appropriate url list
+		const randomIndex = Math.floor(Math.random() * urlList.length);
+		imageUrl = urlList[randomIndex];
 	} else {
-		// Use the first image in the urls array for fixed mode
-		imageUrl = wallpaper.urls[0];
+		// Use the first image in the appropriate url list for fixed mode
+		imageUrl = urlList[0];
 	}
 
 	// Set the background image
@@ -527,6 +556,9 @@ window.onresize = () => {
 	let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
 	offset = offset - offset % 4;
 	document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
+	
+	// Update wallpaper when window size changes
+	initWallpaper();
 }
 
 </script>

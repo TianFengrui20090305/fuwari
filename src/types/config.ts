@@ -40,7 +40,14 @@ export type SiteConfig = {
 	wallpaper: {
 		enable: boolean;
 		mode: "random" | "fixed";
-		urls: string[];
+		urls: {
+			// URL for desktop devices (width > 768px)
+			h?: string[];
+			// URL for mobile devices (width <= 768px)
+			v?: string[];
+			// Fallback URLs if h/v is not specified
+			all?: string[];
+		};
 	};
 };
 
