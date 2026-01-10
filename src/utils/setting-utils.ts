@@ -27,6 +27,59 @@ export function setHue(hue: number): void {
 	r.style.setProperty("--hue", String(hue));
 }
 
+// Rainbow mode functions
+export function getRainbowMode(): boolean {
+	return localStorage.getItem("rainbowMode") === "true";
+}
+
+export function setRainbowMode(enabled: boolean): void {
+	localStorage.setItem("rainbowMode", String(enabled));
+}
+
+export function getRainbowSpeed(): number {
+	return Number(localStorage.getItem("rainbowSpeed")) || 30; // 降低默认速率，从50ms改为30ms
+}
+
+export function setRainbowSpeed(speed: number): void {
+	localStorage.setItem("rainbowSpeed", String(speed));
+}
+
+let rainbowInterval: number | null = null;
+
+export function startRainbowMode(): void {
+	if (rainbowInterval) return;
+
+	let hue = getHue();
+	const speed = getRainbowSpeed();
+	rainbowInterval = window.setInterval(() => {
+		hue = (hue + 3) % 360; // 增加每次变化的角度增量，从1度提高到3度
+		const r = document.querySelector(":root") as HTMLElement;
+		if (r) {
+			r.style.setProperty("--hue", String(hue));
+		}
+	}, speed);
+}
+
+export function stopRainbowMode(): void {
+	if (rainbowInterval) {
+		clearInterval(rainbowInterval);
+		rainbowInterval = null;
+		// Reset hue to stored value when stopping rainbow mode
+		const hue = getHue();
+		const r = document.querySelector(":root") as HTMLElement;
+		if (r) {
+			r.style.setProperty("--hue", String(hue));
+		}
+	}
+}
+
+export function updateRainbowSpeed(): void {
+	if (rainbowInterval) {
+		stopRainbowMode();
+		startRainbowMode();
+	}
+}
+
 export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
 	switch (theme) {
 		case LIGHT_MODE:

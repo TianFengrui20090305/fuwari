@@ -131,6 +131,17 @@ const bannerOffset =
 			// Load the hue from local storage
 			const hue = localStorage.getItem('hue') || configHue;
 			document.documentElement.style.setProperty('--hue', hue);
+			
+			// Check if rainbow mode is enabled
+			const rainbowMode = localStorage.getItem('rainbowMode') === 'true';
+			if (rainbowMode) {
+				let currentHue = Number(hue);
+				const rainbowSpeed = localStorage.getItem('rainbowSpeed') || 30;
+				setInterval(() => {
+					currentHue = (currentHue + 3) % 360; // 增加每次变化的角度增量，从1度提高到3度
+					document.documentElement.style.setProperty('--hue', String(currentHue));
+				}, Number(rainbowSpeed));
+			}
 
 			// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
 			let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
