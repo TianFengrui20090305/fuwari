@@ -93,7 +93,7 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 	theme: "github-dark",
 };
 
-export const giscusConfig: GiscusConfig = {
+export const GiscusConfig = {
 	enable: true, // Set to true to enable Giscus comments
 	repo: "TianFengrui20090305/discussions", // Your GitHub repository name, e.g., "user/repo"
 	repoId: "R_kgDOQ3GOAA", // Your GitHub repository ID
