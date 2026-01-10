@@ -394,6 +394,16 @@ function getWallpaperUrls() {
 	return urlList;
 }
 
+function addCacheBuster(url) {
+	// Add a cache buster to the URL to prevent browser caching
+	// Only add it if the URL doesn't already have query parameters
+	if (url.includes('?')) {
+		return `${url}&t=${Date.now()}`;
+	} else {
+		return `${url}?t=${Date.now()}`;
+	}
+}
+
 function initWallpaper() {
 	const { wallpaper } = siteConfig;
 	if (!wallpaper.enable) return;
@@ -414,8 +424,11 @@ function initWallpaper() {
 		imageUrl = urlList[0];
 	}
 
+	// Add cache buster to prevent browser caching
+	const finalUrl = addCacheBuster(imageUrl);
+
 	// Set the background image
-	wallpaperElement.style.backgroundImage = `url('${imageUrl}')`;
+	wallpaperElement.style.backgroundImage = `url('${finalUrl}')`;
 }
 
 function init() {
