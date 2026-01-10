@@ -37,6 +37,12 @@ export const siteConfig: SiteConfig = {
 		//   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
 		// }
 	],
+	wallpaper: {
+		enable: true,
+		// Wallpaper mode, 'random' or 'fixed'
+		mode: "random",
+		urls: ["https://picsum.photos/1920/1080"],
+	},
 };
 
 export const navBarConfig: NavBarConfig = {

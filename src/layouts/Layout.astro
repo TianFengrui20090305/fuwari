@@ -149,8 +149,13 @@ const bannerOffset =
 
 	</head>
 	<body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
-		  data-overlayscrollbars-initialize
+		data-overlayscrollbars-initialize
 	>
+		<!-- Wallpaper -->
+		{siteConfig.wallpaper.enable && (
+			<div id="wallpaper" class="fixed inset-0 z-[-1] bg-cover bg-center"></div>
+		)}
+		
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
 
@@ -363,12 +368,34 @@ function showBanner() {
 	banner.classList.remove('opacity-0', 'scale-105');
 }
 
+function initWallpaper() {
+	const { wallpaper } = siteConfig;
+	if (!wallpaper.enable) return;
+
+	const wallpaperElement = document.getElementById('wallpaper');
+	if (!wallpaperElement) return;
+
+	let imageUrl;
+	if (wallpaper.mode === 'random') {
+		// Select a random image from the urls array
+		const randomIndex = Math.floor(Math.random() * wallpaper.urls.length);
+		imageUrl = wallpaper.urls[randomIndex];
+	} else {
+		// Use the first image in the urls array for fixed mode
+		imageUrl = wallpaper.urls[0];
+	}
+
+	// Set the background image
+	wallpaperElement.style.backgroundImage = `url('${imageUrl}')`;
+}
+
 function init() {
 	// disableAnimation()()		// TODO
 	loadTheme();
 	loadHue();
 	initCustomScrollbar();
 	showBanner();
+	initWallpaper();
 }
 
 /* Load settings when entering the site */

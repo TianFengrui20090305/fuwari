@@ -36,6 +36,12 @@ export type SiteConfig = {
 	};
 
 	favicon: Favicon[];
+
+	wallpaper: {
+		enable: boolean;
+		mode: "random" | "fixed";
+		urls: string[];
+	};
 };
 
 export type Favicon = {
