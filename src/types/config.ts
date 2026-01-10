@@ -100,3 +100,18 @@ export type BlogPostData = {
 export type ExpressiveCodeConfig = {
 	theme: string;
 };
+
+export type GiscusConfig = {
+	enable: boolean;
+	repo: string;
+	repoId: string;
+	category: string;
+	categoryId: string;
+	mapping: string;
+	dataStrict: "0" | "1";
+	reactionsEnabled: "0" | "1";
+	inputPosition: "top" | "bottom";
+	theme: string;
+	lang: string;
+	loading: "lazy" | "eager";
+};

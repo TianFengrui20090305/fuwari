@@ -76,3 +76,18 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 	// Please select a dark theme, as this blog theme currently only supports dark background color
 	theme: "github-dark",
 };
+
+export const giscusConfig: GiscusConfig = {
+	enable: true, // Set to true to enable Giscus comments
+	repo: "TianFengrui20090305/discussions", // Your GitHub repository name, e.g., "user/repo"
+	repoId: "R_kgDOQ3GOAA", // Your GitHub repository ID
+	category: "Announcements", // Discussion category name
+	categoryId: "DIC_kwDOQ3GOAM4C0ySq", // Discussion category ID
+	mapping: "pathname", // Comment mapping strategy
+	dataStrict: "0", // 0: lenient, 1: strict
+	reactionsEnabled: "1", // Enable reactions
+	inputPosition: "bottom", // Comment input position
+	theme: "preferred_color_scheme", // Theme (use preferred color scheme)
+	lang: "zh-CN", // Language
+	loading: "lazy", // Lazy loading
+};

@@ -1,0 +1,52 @@
+---
+import { giscusConfig } from "../../config";
+
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+
+// Only render if giscus is enabled
+if (!giscusConfig.enable) {
+	return null;
+}
+---
+
+<div class={`giscus-container ${className || ''}`}>
+  <div class="giscus" id="comments"></div>
+  <script
+    src="https://giscus.app/client.js"
+    data-repo={giscusConfig.repo}
+    data-repo-id={giscusConfig.repoId}
+    data-category={giscusConfig.category}
+    data-category-id={giscusConfig.categoryId}
+    data-mapping={giscusConfig.mapping}
+    data-strict={giscusConfig.dataStrict}
+    data-reactions-enabled={giscusConfig.reactionsEnabled}
+    data-emit-metadata="0"
+    data-input-position={giscusConfig.inputPosition}
+    data-theme={giscusConfig.theme}
+    data-lang={giscusConfig.lang}
+    data-loading={giscusConfig.loading}
+    crossorigin="anonymous"
+    async
+  ></script>
+</div>
+
+<style>
+  .giscus-container {
+    margin-top: 2rem;
+    border-top: 1px solid var(--line-divider);
+    padding-top: 1.5rem;
+  }
+
+  .giscus {
+    width: 100%;
+  }
+
+  .giscus-frame {
+    border: none;
+    border-radius: var(--radius-large);
+  }
+</style>
