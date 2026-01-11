@@ -115,7 +115,7 @@ export function getStoredTheme(): LIGHT_DARK_MODE {
 
 // Background settings functions
 export function getBackgroundEnabled(): boolean {
-	return localStorage.getItem("backgroundEnabled") === "true";
+	return localStorage.getItem("backgroundEnabled") !== "false";
 }
 
 export function setBackgroundEnabled(enabled: boolean): void {

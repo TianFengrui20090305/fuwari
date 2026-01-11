@@ -438,8 +438,17 @@ function initWallpaper() {
 	// Add cache buster to prevent browser caching
 	const finalUrl = addCacheBuster(imageUrl);
 
-	// Set the background image
-	wallpaperElement.style.backgroundImage = `url('${finalUrl}')`;
+	// Preload the image to handle loading errors
+	const img = new Image();
+	img.onload = () => {
+		// Set the background image only if it loads successfully
+		wallpaperElement.style.backgroundImage = `url('${finalUrl}')`;
+	};
+	img.onerror = () => {
+		// If the image fails to load, don't set it as background
+		console.warn('Failed to load wallpaper image:', finalUrl);
+	};
+	img.src = finalUrl;
 }
 
 function init() {
