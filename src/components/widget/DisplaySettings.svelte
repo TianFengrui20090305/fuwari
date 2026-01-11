@@ -190,7 +190,7 @@ function addWallpaperFromUrl(url: string) {
             壁纸导入
         </div>
         <div class="flex gap-1">
-            <button aria-label="Import Wallpaper" class="w-11 h-7 rounded-full bg-[var(--btn-regular-bg)] flex items-center px-2 active:scale-95 transition justify-end"
+            <button aria-label="Import Wallpaper" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 transition justify-center flex items-center"
                     onclick={() => {
                         const input = document.createElement('input');
                         input.type = 'file';
@@ -211,7 +211,7 @@ function addWallpaperFromUrl(url: string) {
                         };
                         input.click();
                     }}>
-                <Icon icon="fa6-regular:images" class="text-[0.875rem] text-[var(--btn-content)]"></Icon>
+                <Icon icon="fa6-regular:images" class="text-[0.875rem]"></Icon>
             </button>
         </div>
     </div>
