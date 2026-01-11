@@ -102,6 +102,23 @@ $: {
         </button>
     </div>
     
+    <div class="flex flex-row gap-2 mb-3 items-center justify-between">
+        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+            before:absolute before:-left-3 before:top-[0.33rem]"
+        >
+            变换速率
+        </div>
+        <div id="rainbowSpeedValue" class="transition bg-[var(--btn-regular-bg)] w-14 h-7 rounded-md flex justify-center
+        font-bold text-sm items-center text-[var(--btn-content)]">
+            {rainbowSpeed}ms
+        </div>
+    </div>
+    <div class="w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded select-none mb-6">
+        <input aria-label="Rainbow Speed" type="range" min={minSpeed} max={maxSpeed} bind:value={rainbowSpeedSlider}
+               class="slider" id="rainbowSpeedSlider" step="5" style="width: 100%">
+    </div>
+    
     <div class="flex flex-row gap-2 items-center justify-between mb-3">
         <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
             before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
@@ -130,23 +147,6 @@ $: {
     <div class="w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded select-none mb-6">
         <input aria-label="Background Blur" type="range" min="0" max="20" bind:value={backgroundBlur}
                class="slider" id="backgroundBlurSlider" step="1" style="width: 100%">
-    </div>
-    
-    <div class="flex flex-row gap-2 mb-3 items-center justify-between">
-        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
-            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
-            before:absolute before:-left-3 before:top-[0.33rem]"
-        >
-            变换速率
-        </div>
-        <div id="rainbowSpeedValue" class="transition bg-[var(--btn-regular-bg)] w-14 h-7 rounded-md flex justify-center
-        font-bold text-sm items-center text-[var(--btn-content)]">
-            {rainbowSpeed}ms
-        </div>
-    </div>
-    <div class="w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded select-none mb-6">
-        <input aria-label="Rainbow Speed" type="range" min={minSpeed} max={maxSpeed} bind:value={rainbowSpeedSlider}
-               class="slider" id="rainbowSpeedSlider" step="5" style="width: 100%">
     </div>
     
     <div class="flex flex-row gap-2 items-center justify-between mb-3">
