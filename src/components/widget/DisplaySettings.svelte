@@ -2,11 +2,13 @@
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
-import { getDefaultHue, getHue, setHue, getRainbowMode, setRainbowMode, startRainbowMode, stopRainbowMode, getRainbowSpeed, setRainbowSpeed, updateRainbowSpeed } from "@utils/setting-utils";
+import { getDefaultHue, getHue, setHue, getRainbowMode, setRainbowMode, startRainbowMode, stopRainbowMode, getRainbowSpeed, setRainbowSpeed, updateRainbowSpeed, getBackgroundEnabled, setBackgroundEnabled, getBackgroundBlur, setBackgroundBlur } from "@utils/setting-utils";
 import LightDarkSwitch from "../LightDarkSwitch.svelte";
 
 let hue = getHue();
 let rainbowMode = getRainbowMode();
+let backgroundEnabled = getBackgroundEnabled();
+let backgroundBlur = getBackgroundBlur();
 
 // 速率拖动条的最小值和最大值
 const minSpeed = 5;
@@ -51,6 +53,14 @@ $: {
 	setRainbowSpeed(rainbowSpeed);
 	updateRainbowSpeed();
 }
+
+$: {
+	setBackgroundEnabled(backgroundEnabled);
+}
+
+$: {
+	setBackgroundBlur(backgroundBlur);
+}
 </script>
 
 <div id="display-setting" class="float-panel float-panel-closed absolute transition-all w-80 right-4 px-4 py-4">
@@ -90,6 +100,36 @@ $: {
                 on:click={() => rainbowMode = !rainbowMode}>
             <div class="w-5 h-5 rounded-full transition-all duration-300 transform {rainbowMode ? 'translate-x-4 bg-[var(--primary)]' : 'translate-x-0 bg-white dark:bg-gray-300'}"></div>
         </button>
+    </div>
+    
+    <div class="flex flex-row gap-2 items-center justify-between mb-3">
+        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+            before:absolute before:-left-3 before:top-[0.33rem]"
+        >
+            开启背景
+        </div>
+        <button aria-label="Toggle Background" class="w-11 h-7 rounded-full bg-[var(--btn-regular-bg)] flex items-center px-1 active:scale-95 transition"
+                on:click={() => backgroundEnabled = !backgroundEnabled}>
+            <div class="w-5 h-5 rounded-full transition-all duration-300 transform {backgroundEnabled ? 'translate-x-4 bg-[var(--primary)]' : 'translate-x-0 bg-white dark:bg-gray-300'}"></div>
+        </button>
+    </div>
+    
+    <div class="flex flex-row gap-2 mb-3 items-center justify-between">
+        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+            before:absolute before:-left-3 before:top-[0.33rem]"
+        >
+            背景模糊
+        </div>
+        <div id="backgroundBlurValue" class="transition bg-[var(--btn-regular-bg)] w-14 h-7 rounded-md flex justify-center
+        font-bold text-sm items-center text-[var(--btn-content)]">
+            {backgroundBlur}px
+        </div>
+    </div>
+    <div class="w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded select-none mb-6">
+        <input aria-label="Background Blur" type="range" min="0" max="20" bind:value={backgroundBlur}
+               class="slider" id="backgroundBlurSlider" step="1" style="width: 100%">
     </div>
     
     <div class="flex flex-row gap-2 mb-3 items-center justify-between">

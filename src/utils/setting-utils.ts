@@ -112,3 +112,32 @@ export function setTheme(theme: LIGHT_DARK_MODE): void {
 export function getStoredTheme(): LIGHT_DARK_MODE {
 	return (localStorage.getItem("theme") as LIGHT_DARK_MODE) || DEFAULT_THEME;
 }
+
+// Background settings functions
+export function getBackgroundEnabled(): boolean {
+	return localStorage.getItem("backgroundEnabled") === "true";
+}
+
+export function setBackgroundEnabled(enabled: boolean): void {
+	localStorage.setItem("backgroundEnabled", String(enabled));
+	const wallpaper = document.getElementById("wallpaper");
+	if (wallpaper) {
+		if (enabled) {
+			wallpaper.classList.remove("hidden");
+		} else {
+			wallpaper.classList.add("hidden");
+		}
+	}
+}
+
+export function getBackgroundBlur(): number {
+	return Number(localStorage.getItem("backgroundBlur")) || 0;
+}
+
+export function setBackgroundBlur(blur: number): void {
+	localStorage.setItem("backgroundBlur", String(blur));
+	const wallpaper = document.getElementById("wallpaper");
+	if (wallpaper) {
+		wallpaper.style.filter = `blur(${blur}px)`;
+	}
+}
