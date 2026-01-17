@@ -12,11 +12,8 @@ let backgroundEnabled = getBackgroundEnabled();
 let backgroundBlur = getBackgroundBlur();
 let showAdvancedSettings = false;
 
-// Wallpaper rotation feature
+// Wallpaper feature
 let wallpaperList: string[] = JSON.parse(localStorage.getItem('wallpaperList') || '[]');
-let autoRotate = localStorage.getItem('autoRotate') === 'true';
-let rotateInterval: number | null = null;
-let rotateIntervalTime = Number(localStorage.getItem('rotateIntervalTime')) || 5000;
 let useCustomWallpaper = localStorage.getItem('useCustomWallpaper') === 'true';
 
 // 速率拖动条的最小值和最大值
@@ -71,24 +68,9 @@ $: {
 	setBackgroundBlur(backgroundBlur);
 }
 
-// Wallpaper rotation logic
 $: {
 	localStorage.setItem('wallpaperList', JSON.stringify(wallpaperList));
-	localStorage.setItem('autoRotate', String(autoRotate));
-	localStorage.setItem('rotateIntervalTime', String(rotateIntervalTime));
 	localStorage.setItem('useCustomWallpaper', String(useCustomWallpaper));
-	
-	if (autoRotate && wallpaperList.length > 0) {
-		if (rotateInterval) {
-			clearInterval(rotateInterval);
-		}
-		rotateInterval = window.setInterval(() => {
-			randomizeWallpaper();
-		}, rotateIntervalTime);
-	} else if (rotateInterval) {
-		clearInterval(rotateInterval);
-		rotateInterval = null;
-	}
 }
 
 function randomizeWallpaper() {
@@ -237,6 +219,16 @@ function addWallpaperFromUrl(url: string) {
                class="slider" id="backgroundBlurSlider" step="1" style="width: 100%">
     </div>
     
+    <div class="flex flex-row gap-2 items-center justify-between mb-3">
+        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+            before:absolute before:-left-3 before:top-[0.33rem]"
+        >
+            {i18n(I18nKey.colorScheme)}
+        </div>
+        <LightDarkSwitch />
+    </div>
+    
     <div class="border-t border-[var(--btn-regular-bg)] my-4"></div>
     
     <div class="flex flex-row gap-2 items-center justify-between mb-3">
@@ -254,19 +246,6 @@ function addWallpaperFromUrl(url: string) {
     
     {#if showAdvancedSettings}
         <div class="advanced-settings-panel">
-            <div class="flex flex-row gap-2 items-center justify-between mb-3">
-                <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
-                    before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:-left-3 before:top-[0.33rem]"
-                >
-                    启用自定义壁纸
-                </div>
-                <button aria-label="Toggle Custom Wallpaper" class="w-11 h-7 rounded-full bg-[var(--btn-regular-bg)] flex items-center px-1 active:scale-95 transition"
-                        onclick={() => useCustomWallpaper = !useCustomWallpaper}>
-                    <div class="w-5 h-5 rounded-full transition-all duration-300 transform {useCustomWallpaper ? 'translate-x-4 bg-[var(--primary)]' : 'translate-x-0 bg-white dark:bg-gray-300'}"></div>
-                </button>
-            </div>
-            
             <div class="flex flex-row gap-2 items-center justify-between mb-3">
                 <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
                     before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
@@ -295,6 +274,21 @@ function addWallpaperFromUrl(url: string) {
             <div class="w-full h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded select-none mb-6">
                 <input aria-label="Rainbow Speed" type="range" min={minSpeed} max={maxSpeed} bind:value={rainbowSpeedSlider}
                        class="slider" id="rainbowSpeedSlider" step="5" style="width: 100%">
+            </div>
+            
+            <div class="border-t border-[var(--btn-regular-bg)] my-4"></div>
+            
+            <div class="flex flex-row gap-2 items-center justify-between mb-3">
+                <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+                    before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+                    before:absolute before:-left-3 before:top-[0.33rem]"
+                >
+                    启用自定义壁纸
+                </div>
+                <button aria-label="Toggle Custom Wallpaper" class="w-11 h-7 rounded-full bg-[var(--btn-regular-bg)] flex items-center px-1 active:scale-95 transition"
+                        onclick={() => useCustomWallpaper = !useCustomWallpaper}>
+                    <div class="w-5 h-5 rounded-full transition-all duration-300 transform {useCustomWallpaper ? 'translate-x-4 bg-[var(--primary)]' : 'translate-x-0 bg-white dark:bg-gray-300'}"></div>
+                </button>
             </div>
             
             <div class="flex flex-row gap-2 items-center justify-between mb-3">
@@ -351,36 +345,6 @@ function addWallpaperFromUrl(url: string) {
                 </div>
             </div>
             
-            <div class="flex flex-row gap-2 items-center justify-between mb-3">
-                <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
-                    before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:-left-3 before:top-[0.33rem]"
-                >
-                    随机切换
-                </div>
-                <button aria-label="Toggle Auto Rotate" class="w-11 h-7 rounded-full bg-[var(--btn-regular-bg)] flex items-center px-1 active:scale-95 transition"
-                        onclick={() => autoRotate = !autoRotate}>
-                    <div class="w-5 h-5 rounded-full transition-all duration-300 transform {autoRotate ? 'translate-x-4 bg-[var(--primary)]' : 'translate-x-0 bg-white dark:bg-gray-300'}"></div>
-                </button>
-            </div>
-            
-            <div class="flex flex-row gap-2 mb-3 items-center justify-between">
-                <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
-                    before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:-left-3 before:top-[0.33rem]"
-                >
-                    切换间隔
-                </div>
-                <div class="flex gap-1">
-                    <input type="range" min="1000" max="30000" step="1000" bind:value={rotateIntervalTime}
-                           class="w-28 h-6 px-1 bg-[oklch(0.80_0.10_0)] dark:bg-[oklch(0.70_0.10_0)] rounded select-none slider">
-                    <div class="transition bg-[var(--btn-regular-bg)] w-16 h-7 rounded-md flex justify-center
-                    font-bold text-sm items-center text-[var(--btn-content)]">
-                        {rotateIntervalTime / 1000}s
-                    </div>
-                </div>
-            </div>
-            
             {#if wallpaperList.length > 0}
                 <div class="mb-3">
                     <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3 mb-2
@@ -402,16 +366,6 @@ function addWallpaperFromUrl(url: string) {
                     </div>
                 </div>
             {/if}
-            
-            <div class="flex flex-row gap-2 items-center justify-between mb-3">
-                <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
-                    before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
-                    before:absolute before:-left-3 before:top-[0.33rem]"
-                >
-                    {i18n(I18nKey.colorScheme)}
-                </div>
-                <LightDarkSwitch />
-            </div>
         </div>
     {/if}
 </div>
