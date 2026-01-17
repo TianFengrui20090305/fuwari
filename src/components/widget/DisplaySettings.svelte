@@ -11,6 +11,7 @@ let rainbowMode = getRainbowMode();
 let backgroundEnabled = getBackgroundEnabled();
 let backgroundBlur = getBackgroundBlur();
 let showAdvancedSettings = false;
+let showOtherFeatures = false;
 
 // Wallpaper feature
 let wallpaperList: string[] = JSON.parse(localStorage.getItem('wallpaperList') || '[]');
@@ -154,6 +155,43 @@ function addWallpaperFromUrl(url: string) {
 	if (url) {
 		wallpaperList = [...wallpaperList, url];
 	}
+}
+
+function downloadCurrentWallpaper() {
+	const wallpaper = document.getElementById('wallpaper');
+	if (!wallpaper) return;
+	
+	const backgroundImage = wallpaper.style.backgroundImage;
+	if (!backgroundImage) {
+		alert('当前没有设置壁纸！');
+		return;
+	}
+	
+	const urlMatch = backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+	if (!urlMatch || !urlMatch[1]) {
+		alert('无法获取壁纸URL！');
+		return;
+	}
+	
+	const url = urlMatch[1];
+	
+	fetch(url)
+		.then(response => response.blob())
+		.then(blob => {
+			const blobUrl = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = blobUrl;
+			const timestamp = new Date().getTime();
+			link.download = `wallpaper_${timestamp}.jpg`;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			window.URL.revokeObjectURL(blobUrl);
+		})
+		.catch(error => {
+			console.error('下载壁纸失败:', error);
+			alert('下载壁纸失败，请检查网络连接！');
+		});
 }
 </script>
 
@@ -373,6 +411,40 @@ function addWallpaperFromUrl(url: string) {
                     </div>
                 </div>
             {/if}
+        </div>
+    {/if}
+    
+    <div class="border-t border-[var(--btn-regular-bg)] my-4"></div>
+    
+    <div class="flex flex-row gap-2 items-center justify-between mb-3">
+        <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+            before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+            before:absolute before:-left-3 before:top-[0.33rem]"
+        >
+            其他功能
+        </div>
+        <button aria-label="Toggle Other Features" class="w-11 h-7 rounded-full bg-[var(--btn-regular-bg)] flex items-center px-1 active:scale-95 transition"
+                onclick={() => showOtherFeatures = !showOtherFeatures}>
+            <div class="w-5 h-5 rounded-full transition-all duration-300 transform {showOtherFeatures ? 'translate-x-4 bg-[var(--primary)]' : 'translate-x-0 bg-white dark:bg-gray-300'}"></div>
+        </button>
+    </div>
+    
+    {#if showOtherFeatures}
+        <div class="other-features-panel">
+            <div class="flex flex-row gap-2 items-center justify-between mb-3">
+                <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+                    before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+                    before:absolute before:-left-3 before:top-[0.33rem]"
+                >
+                    下载壁纸
+                </div>
+                <div class="flex gap-1">
+                    <button aria-label="Download Wallpaper" class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 transition justify-center flex items-center"
+                            onclick={downloadCurrentWallpaper}>
+                        <Icon icon="fa6-solid:download" class="text-[0.875rem]"></Icon>
+                    </button>
+                </div>
+            </div>
         </div>
     {/if}
 </div>
