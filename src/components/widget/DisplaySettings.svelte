@@ -4,6 +4,7 @@ import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { getDefaultHue, getHue, setHue, getRainbowMode, setRainbowMode, startRainbowMode, stopRainbowMode, getRainbowSpeed, setRainbowSpeed, updateRainbowSpeed, getBackgroundEnabled, setBackgroundEnabled, getBackgroundBlur, setBackgroundBlur } from "@utils/setting-utils";
 import LightDarkSwitch from "../LightDarkSwitch.svelte";
+import { siteConfig } from "@/config";
 
 let hue = getHue();
 let rainbowMode = getRainbowMode();
@@ -16,6 +17,7 @@ let wallpaperList: string[] = JSON.parse(localStorage.getItem('wallpaperList') |
 let autoRotate = localStorage.getItem('autoRotate') === 'true';
 let rotateInterval: number | null = null;
 let rotateIntervalTime = Number(localStorage.getItem('rotateIntervalTime')) || 5000;
+let useCustomWallpaper = localStorage.getItem('useCustomWallpaper') === 'true';
 
 // 速率拖动条的最小值和最大值
 const minSpeed = 5;
@@ -74,6 +76,7 @@ $: {
 	localStorage.setItem('wallpaperList', JSON.stringify(wallpaperList));
 	localStorage.setItem('autoRotate', String(autoRotate));
 	localStorage.setItem('rotateIntervalTime', String(rotateIntervalTime));
+	localStorage.setItem('useCustomWallpaper', String(useCustomWallpaper));
 	
 	if (autoRotate && wallpaperList.length > 0) {
 		if (rotateInterval) {
@@ -89,11 +92,62 @@ $: {
 }
 
 function randomizeWallpaper() {
-	if (wallpaperList.length === 0) return;
-	const randomIndex = Math.floor(Math.random() * wallpaperList.length);
 	const wallpaper = document.getElementById('wallpaper');
-	if (wallpaper) {
+	if (!wallpaper) return;
+	
+	if (useCustomWallpaper) {
+		if (wallpaperList.length === 0) {
+			alert('请先导入壁纸！');
+			return;
+		}
+		const randomIndex = Math.floor(Math.random() * wallpaperList.length);
 		wallpaper.style.backgroundImage = `url('${wallpaperList[randomIndex]}')`;
+	} else {
+		const urlList = getWallpaperUrls();
+		if (urlList.length === 0) return;
+		
+		const randomIndex = Math.floor(Math.random() * urlList.length);
+		const imageUrl = urlList[randomIndex];
+		
+		const finalUrl = addCacheBuster(imageUrl);
+		
+		const img = new Image();
+		img.onload = () => {
+			wallpaper.style.backgroundImage = `url('${finalUrl}')`;
+		};
+		img.onerror = () => {
+			console.warn('Failed to load wallpaper image:', finalUrl);
+		};
+		img.src = finalUrl;
+	}
+}
+
+function getWallpaperUrls() {
+	const deviceType = getDeviceType();
+	const urls = siteConfig.wallpaper.urls;
+	
+	let urlList;
+	if (deviceType === 'desktop' && urls.h && urls.h.length > 0) {
+		urlList = urls.h;
+	} else if (deviceType === 'mobile' && urls.v && urls.v.length > 0) {
+		urlList = urls.v;
+	} else {
+		urlList = urls.all || [];
+	}
+	
+	return urlList;
+}
+
+function getDeviceType() {
+	const width = window.innerWidth;
+	return width > 768 ? 'desktop' : 'mobile';
+}
+
+function addCacheBuster(url) {
+	if (url.includes('?')) {
+		return `${url}&t=${Date.now()}`;
+	} else {
+		return `${url}?t=${Date.now()}`;
 	}
 }
 
@@ -158,7 +212,7 @@ function addWallpaperFromUrl(url: string) {
             before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
             before:absolute before:-left-3 before:top-[0.33rem]"
         >
-            立即切换
+            {useCustomWallpaper ? '切换自定义壁纸' : '切换随机壁纸'}
         </div>
         <button aria-label="Randomize Wallpaper Now" class="w-11 h-7 rounded-full bg-[var(--btn-regular-bg)] flex items-center px-2 active:scale-95 transition justify-center"
                 onclick={randomizeWallpaper}>
@@ -200,6 +254,19 @@ function addWallpaperFromUrl(url: string) {
     
     {#if showAdvancedSettings}
         <div class="advanced-settings-panel">
+            <div class="flex flex-row gap-2 items-center justify-between mb-3">
+                <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
+                    before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
+                    before:absolute before:-left-3 before:top-[0.33rem]"
+                >
+                    启用自定义壁纸
+                </div>
+                <button aria-label="Toggle Custom Wallpaper" class="w-11 h-7 rounded-full bg-[var(--btn-regular-bg)] flex items-center px-1 active:scale-95 transition"
+                        onclick={() => useCustomWallpaper = !useCustomWallpaper}>
+                    <div class="w-5 h-5 rounded-full transition-all duration-300 transform {useCustomWallpaper ? 'translate-x-4 bg-[var(--primary)]' : 'translate-x-0 bg-white dark:bg-gray-300'}"></div>
+                </button>
+            </div>
+            
             <div class="flex flex-row gap-2 items-center justify-between mb-3">
                 <div class="flex gap-2 font-bold text-lg text-neutral-900 dark:text-neutral-100 transition relative ml-3
                     before:w-1 before:h-4 before:rounded-md before:bg-[var(--primary)]
