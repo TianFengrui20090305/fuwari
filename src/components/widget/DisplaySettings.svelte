@@ -134,7 +134,7 @@ function addCacheBuster(url) {
 }
 
 function removeWallpaper(index: number) {
-	wallpaperList.splice(index, 1);
+	wallpaperList = wallpaperList.filter((_, i) => i !== index);
 	if (wallpaperList.length === 0) {
 		const wallpaper = document.getElementById('wallpaper');
 		if (wallpaper) {
@@ -143,9 +143,16 @@ function removeWallpaper(index: number) {
 	}
 }
 
+function setWallpaper(url: string) {
+	const wallpaper = document.getElementById('wallpaper');
+	if (wallpaper) {
+		wallpaper.style.backgroundImage = `url('${url}')`;
+	}
+}
+
 function addWallpaperFromUrl(url: string) {
 	if (url) {
-		wallpaperList.push(url);
+		wallpaperList = [...wallpaperList, url];
 	}
 }
 </script>
@@ -311,7 +318,7 @@ function addWallpaperFromUrl(url: string) {
                                         Array.from(files).forEach(file => {
                                             const reader = new FileReader();
                                             reader.onload = (e) => {
-                                                wallpaperList.push(e.target?.result as string);
+                                                wallpaperList = [...wallpaperList, e.target?.result as string];
                                                 localStorage.setItem('wallpaperList', JSON.stringify(wallpaperList));
                                             };
                                             reader.readAsDataURL(file);
@@ -353,12 +360,12 @@ function addWallpaperFromUrl(url: string) {
                     >
                         壁纸列表 ({wallpaperList.length})
                     </div>
-                    <div class="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto p-2 bg-[var(--btn-regular-bg)] rounded-md">
+                    <div class="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 bg-[var(--btn-regular-bg)] rounded-md custom-scrollbar">
                         {#each wallpaperList as wallpaper, index}
-                            <div class="relative group">
+                            <div class="relative group cursor-pointer" onclick={() => setWallpaper(wallpaper)}>
                                 <div class="w-full h-16 bg-cover bg-center rounded-md" style={`background-image: url('${wallpaper}')`}></div>
-                                <button aria-label="Remove Wallpaper" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                                        onclick={() => removeWallpaper(index)}>
+                                <button aria-label="Remove Wallpaper" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                        onclick={(e) => { e.stopPropagation(); removeWallpaper(index); }}>
                                     ×
                                 </button>
                             </div>
@@ -416,5 +423,16 @@ function addWallpaperFromUrl(url: string) {
             background rgba(255, 255, 255, 0.8)
           &:active
             background rgba(255, 255, 255, 0.6)
+
+      .custom-scrollbar
+        &::-webkit-scrollbar
+          width 8px
+        &::-webkit-scrollbar-track
+          background transparent
+        &::-webkit-scrollbar-thumb
+          background rgba(128, 128, 128, 0.3)
+          border-radius 4px
+          &:hover
+            background rgba(128, 128, 128, 0.5)
 
 </style>
