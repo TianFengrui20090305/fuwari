@@ -458,16 +458,30 @@ function initWallpaper() {
 	} else {
 		// Handle image wallpaper
 		if (wallpaperElement.tagName === 'DIV') {
+			console.log('Initializing image wallpaper with URL:', finalUrl);
+			
 			// Preload the image to handle loading errors
 			const img = new Image();
+			
+			// Enable CORS for cross-origin images
+			img.crossOrigin = 'anonymous';
+			
 			img.onload = () => {
+				console.log('Image loaded successfully:', {
+					width: img.width,
+					height: img.height
+				});
 				// Set the background image only if it loads successfully
 				wallpaperElement.style.backgroundImage = `url('${finalUrl}')`;
 			};
-			img.onerror = () => {
-				// If the image fails to load, don't set it as background
-				console.warn('Failed to load wallpaper image:', finalUrl);
+			
+			img.onerror = (error) => {
+				console.error('Failed to load wallpaper image:', {
+					url: finalUrl,
+					error: error
+				});
 			};
+			
 			img.src = finalUrl;
 		}
 	}
