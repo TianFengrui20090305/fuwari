@@ -40,6 +40,7 @@ export type SiteConfig = {
 	wallpaper: {
 		enable: boolean;
 		mode: "random" | "fixed";
+		type: "image" | "video";
 		urls: {
 			// URL for desktop devices (width > 768px)
 			h?: string[];
@@ -61,6 +62,7 @@ export enum LinkPreset {
 	Home = 0,
 	Archive = 1,
 	About = 2,
+	Friends = 3,
 }
 
 export type NavBarLink = {

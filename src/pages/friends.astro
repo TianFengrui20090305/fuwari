@@ -1,0 +1,51 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+
+const friends = [
+	{
+		name: "AcoFork",
+		url: "https://blog.acofork.com",
+		description: "这是友链描述",
+		avatar: "https://q2.qlogo.cn/headimg_dl?dst_uin=2726730791&spec=0",
+	},
+	{
+		name: "AcoFork",
+		url: "https://blog.acofork.com",
+		description: "这是友链描述",
+		avatar: "https://q2.qlogo.cn/headimg_dl?dst_uin=2726730791&spec=0",
+	},
+];
+---
+
+<MainGridLayout title={i18n(I18nKey.friends)} description={i18n(I18nKey.friends)}>
+	<div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
+		<div class="card-base z-10 px-9 py-6 relative w-full">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				{friends.map((friend) => (
+					<a
+						href={friend.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="group flex items-center gap-4 p-4 rounded-lg hover:bg-[var(--hover-bg)] transition-colors duration-200"
+					>
+						<img
+							src={friend.avatar}
+							alt={friend.name}
+							class="w-12 h-12 rounded-full object-cover"
+						/>
+						<div class="flex-1">
+							<div class="font-bold text-[var(--primary)] group-hover:underline">
+								{friend.name}
+							</div>
+							<div class="text-sm text-white">
+								{friend.description}
+							</div>
+						</div>
+					</a>
+				))}
+			</div>
+		</div>
+	</div>
+</MainGridLayout>

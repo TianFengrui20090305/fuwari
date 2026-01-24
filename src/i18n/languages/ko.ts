@@ -5,6 +5,7 @@ export const ko: Translation = {
 	[Key.home]: "홈",
 	[Key.about]: "소개",
 	[Key.archive]: "아카이브",
+	[Key.friends]: "친구",
 	[Key.search]: "검색",
 
 	[Key.tags]: "태그",
@@ -25,8 +26,9 @@ export const ko: Translation = {
 	[Key.postsCount]: "게시물",
 
 	[Key.themeColor]: "테마 색상",
+	[Key.colorScheme]: "색상 테마",
 
-	[Key.lightMode]: "밝은 모드",
+	[Key.lightMode]: "라이트",
 	[Key.darkMode]: "어두운 모드",
 	[Key.systemMode]: "시스템 모드",
 

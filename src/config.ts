@@ -41,6 +41,7 @@ export const siteConfig: SiteConfig = {
 		enable: true,
 		// Wallpaper mode, 'random' or 'fixed'
 		mode: "random",
+		type: "image",
 		urls: {
 			// URL for desktop devices (width > 768px)
 			h: ["https://randomimg.isfreeah.top/h"],
@@ -59,12 +60,8 @@ export const navBarConfig: NavBarConfig = {
 	links: [
 		LinkPreset.Home,
 		LinkPreset.Archive,
+		LinkPreset.Friends,
 		LinkPreset.About,
-		{
-			name: "GitHub",
-			url: "https://github.com/TianFengrui20090305/fuwari", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
 	],
 };
 

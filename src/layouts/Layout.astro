@@ -163,8 +163,11 @@ const bannerOffset =
 		data-overlayscrollbars-initialize
 	>
 		<!-- Wallpaper -->
-		{siteConfig.wallpaper.enable && (
+		{siteConfig.wallpaper.enable && siteConfig.wallpaper.type === 'image' && (
 			<div id="wallpaper" class="fixed inset-0 z-[-1] bg-cover bg-center"></div>
+		)}
+		{siteConfig.wallpaper.enable && siteConfig.wallpaper.type === 'video' && (
+			<video id="wallpaper" class="fixed inset-0 z-[-1] w-full h-full object-cover" autoplay loop muted playsinline></video>
 		)}
 		
 		<ConfigCarrier></ConfigCarrier>
@@ -425,30 +428,49 @@ function initWallpaper() {
 	const urlList = getWallpaperUrls();
 	if (urlList.length === 0) return;
 
-	let imageUrl;
+	let mediaUrl;
 	if (wallpaper.mode === 'random') {
-		// Select a random image from the appropriate url list
+		// Select a random media from the appropriate url list
 		const randomIndex = Math.floor(Math.random() * urlList.length);
-		imageUrl = urlList[randomIndex];
+		mediaUrl = urlList[randomIndex];
 	} else {
-		// Use the first image in the appropriate url list for fixed mode
-		imageUrl = urlList[0];
+		// Use the first media in the appropriate url list for fixed mode
+		mediaUrl = urlList[0];
 	}
 
 	// Add cache buster to prevent browser caching
-	const finalUrl = addCacheBuster(imageUrl);
+	const finalUrl = addCacheBuster(mediaUrl);
 
-	// Preload the image to handle loading errors
-	const img = new Image();
-	img.onload = () => {
-		// Set the background image only if it loads successfully
-		wallpaperElement.style.backgroundImage = `url('${finalUrl}')`;
-	};
-	img.onerror = () => {
-		// If the image fails to load, don't set it as background
-		console.warn('Failed to load wallpaper image:', finalUrl);
-	};
-	img.src = finalUrl;
+	if (wallpaper.type === 'video') {
+		// Handle video wallpaper
+		if (wallpaperElement.tagName === 'VIDEO') {
+			// Set video source
+			wallpaperElement.src = finalUrl;
+			
+			// Add error handling for video
+			wallpaperElement.onerror = () => {
+				console.warn('Failed to load wallpaper video:', finalUrl);
+			};
+			
+			// Load the video
+			wallpaperElement.load();
+		}
+	} else {
+		// Handle image wallpaper
+		if (wallpaperElement.tagName === 'DIV') {
+			// Preload the image to handle loading errors
+			const img = new Image();
+			img.onload = () => {
+				// Set the background image only if it loads successfully
+				wallpaperElement.style.backgroundImage = `url('${finalUrl}')`;
+			};
+			img.onerror = () => {
+				// If the image fails to load, don't set it as background
+				console.warn('Failed to load wallpaper image:', finalUrl);
+			};
+			img.src = finalUrl;
+		}
+	}
 }
 
 function init() {

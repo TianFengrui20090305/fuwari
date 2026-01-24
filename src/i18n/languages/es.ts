@@ -3,8 +3,9 @@ import type { Translation } from "../translation";
 
 export const es: Translation = {
 	[Key.home]: "Inicio",
-	[Key.about]: "Sobre mí",
+	[Key.about]: "Acerca de",
 	[Key.archive]: "Archivo",
+	[Key.friends]: "Amigos",
 	[Key.search]: "Buscar",
 
 	[Key.tags]: "Etiquetas",
@@ -25,6 +26,7 @@ export const es: Translation = {
 	[Key.postsCount]: "publicaciones",
 
 	[Key.themeColor]: "Color del tema",
+	[Key.colorScheme]: "Esquema de color",
 
 	[Key.lightMode]: "Claro",
 	[Key.darkMode]: "Oscuro",

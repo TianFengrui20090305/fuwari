@@ -4,7 +4,8 @@ import type { Translation } from "../translation";
 export const th: Translation = {
 	[Key.home]: "หน้าแรก",
 	[Key.about]: "เกี่ยวกับ",
-	[Key.archive]: "คลัง",
+	[Key.archive]: "สารบรรณ",
+	[Key.friends]: "เพื่อน",
 	[Key.search]: "ค้นหา",
 
 	[Key.tags]: "ป้ายกำกับ",
@@ -24,7 +25,8 @@ export const th: Translation = {
 	[Key.postCount]: "โพสต์",
 	[Key.postsCount]: "โพสต์",
 
-	[Key.themeColor]: "สีของธีม",
+	[Key.themeColor]: "สีธีม",
+	[Key.colorScheme]: "โหมดสี",
 
 	[Key.lightMode]: "สว่าง",
 	[Key.darkMode]: "มืด",

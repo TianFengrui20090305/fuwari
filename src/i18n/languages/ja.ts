@@ -5,6 +5,7 @@ export const ja: Translation = {
 	[Key.home]: "Home",
 	[Key.about]: "About",
 	[Key.archive]: "Archive",
+	[Key.friends]: "フレンズ",
 	[Key.search]: "検索",
 
 	[Key.tags]: "タグ",
@@ -25,6 +26,7 @@ export const ja: Translation = {
 	[Key.postsCount]: "件の投稿",
 
 	[Key.themeColor]: "テーマカラー",
+	[Key.colorScheme]: "カラースキーム",
 
 	[Key.lightMode]: "ライト",
 	[Key.darkMode]: "ダーク",
